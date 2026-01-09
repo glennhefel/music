@@ -1,0 +1,12 @@
+TITLE: Jadi Kagoje Likho Nam
+LANGUAGE: bn
+WARNING: Lyrics below are randomly assigned and DO NOT correspond to this audio.
+RANDOM_LYRICS_TITLE: বনের পাখী যদি হতাম
+RANDOM_LYRICS_CATEGORY: আধুনিক
+SOURCE: data/BanglaSongLyrics.csv (random sample; unpaired)
+
+যদি হতাম চাঁদ জোছনা ভাঙ্গা রাত
+হয়ে তোমারে শুধু রাখিতাম পাহারায়
+যদি হতাম চুড়ি তোমার হাতে ধরি
+ছন্দে বাজিতাম তোমারি চিন্তায়
+ভালবাসি গো ভালবাসি গো তোমায়…………।।

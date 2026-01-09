@@ -1,0 +1,24 @@
+TITLE: Swapnil Ei Rate
+LANGUAGE: bn
+WARNING: Lyrics below are randomly assigned and DO NOT correspond to this audio.
+RANDOM_LYRICS_TITLE: কতকাল খুজবো তোমায়
+RANDOM_LYRICS_CATEGORY: ব্যান্ড
+SOURCE: data/BanglaSongLyrics.csv (random sample; unpaired)
+
+শেষ বিকেলের আলো বিষাদ সন্ধা
+চলতে চলতে পথে
+হঠাৎ প্রশ্ন জাগে –
+কতকাল খুজবো তোমায়
+আর কতকাল খুজবো তোমায়
+মাঝরাতে ঘুম ভাঙ্গে
+চেয়ে দেখি আকাশে তাঁরার মেলা
+রাতের নির্জনে গাছের পাতা এমন সময়।
+হঠাৎ প্রশ্ন জাগে –
+কতকাল খুজবো তোমায়
+আর কতকাল খুজবো তোমায়   
+মাঝরাতে ঘুম ভাঙ্গে
+চেয়ে দেখি আকাশে জোছনা ধারা
+উদাসি পাখি কাঁদে চেয়ে শুন্যতায় এমন সময়।
+হঠাৎ প্রশ্ন জাগে –
+কতকাল খুজবো তোমায়
+আর কতকাল খুজবো তোমায়।।

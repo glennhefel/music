@@ -1,0 +1,12 @@
+TITLE: Biphale Prabhat
+LANGUAGE: bn
+WARNING: Lyrics below are randomly assigned and DO NOT correspond to this audio.
+RANDOM_LYRICS_TITLE: কত যে সয়েছি ব্যথা অভিমানিনী
+RANDOM_LYRICS_CATEGORY: আধুনিক
+SOURCE: data/BanglaSongLyrics.csv (random sample; unpaired)
+
+কত যে সয়েছি ব্যথা অভিমানিনী তোমারই তরে
+তুমি জানোনা, জানাবো তোমায় আমি কেমন করে।। 
+আঁধার রজনী কত গেছে বিমনা,
+আমি তারে জানি, ওগো তুমি তারে জানো না
+কত যে স্বপ্ন মোর আঁখির জলে গিয়েছে ঝরে।।

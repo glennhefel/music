@@ -1,0 +1,19 @@
+TITLE: Mor Na Mitelo Asha
+LANGUAGE: bn
+WARNING: Lyrics below are randomly assigned and DO NOT correspond to this audio.
+RANDOM_LYRICS_TITLE: মনে করো এখন অনেক রাত
+RANDOM_LYRICS_CATEGORY: ব্যান্ড
+SOURCE: data/BanglaSongLyrics.csv (random sample; unpaired)
+
+মনে করো মনে করো মনে করো
+এখন অনেক রাত
+পৃথিবী ভীষণ ক্লান্ত
+কেউ জেগে নেই
+শুধু তুমি আর আমি।।
+আকাশে রূপালী চাঁদ মায়াময়
+কিছু আলো নদীর জলে ঢেউগুলি
+স্বপ্নে বিভোর হই দুজনা
+শুধু তুমি আর আমি।।
+ঠিকানা বিহীন হয়ে সারা রাত
+আলো জল নদীর জলে ঝিলিমিলি
+শুধু তুমি আর আমি।।

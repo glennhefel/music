@@ -1,0 +1,20 @@
+TITLE: Hello Dhaka
+LANGUAGE: bn
+WARNING: Lyrics below are randomly assigned and DO NOT correspond to this audio.
+RANDOM_LYRICS_TITLE: কার কাছে যাবো
+RANDOM_LYRICS_CATEGORY: ব্যান্ড
+SOURCE: data/BanglaSongLyrics.csv (random sample; unpaired)
+
+নিস্তব্ধ এই নাগরিক লোকালয়ে
+জীবনের কাছ থেকে সবটুকু পরাজয় মেনে নিয়ে
+এখন আমি  কার কাছে যাব। বলে দাও 
+আমার অনেক সুবর্ন ফেরারী
+অগোছালো জীবনের পথে
+দাড়িয়ে থাকবে না কেউ
+বুকে তুলে নিতে আমাকে।
+এখন আমি কার কাছে যাব। বলে দাও
+চিনতে পারেনি আমায় অনেকে
+পরিচিত ভেবেছি যাকে
+অচেনা হয়েছি আমি
+চেনা কত মানুষের কাছে। 
+এখন আমি অহুওও কার কাছে যাব। বলে দাও
