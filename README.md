@@ -1,213 +1,131 @@
-# Unsupervised Learning Project: VAE for Music Clustering
+# Unsupervised Music Clustering (Audio + Lyrics)
 
-Course: Neural Networks  
-Prepared By: Moin Mostakim
+This repo builds a multilingual music dataset (English + Bangla included) and runs an unsupervised clustering pipeline using VAE-based embeddings and baselines.
 
-This repo implements an unsupervised pipeline inspired by Variational Autoencoders (VAE) to learn latent representations from music features and cluster tracks.
+Key capabilities:
+- Features: lyrics TF-IDF, MFCC summary, MFCC frames, log-mel spectrograms, hybrid audio+lyrics, and a simple multimodal variant.
+- Models/baselines: VAE (MLP/Conv2D), Beta-VAE via `--beta`, CVAE via `--cond-col`, plus baselines (`pca`, `ae`, `raw`).
+- Clustering: KMeans, Agglomerative, DBSCAN, Spectral.
+- Metrics: silhouette, Calinski-Harabasz, Davies-Bouldin, plus ARI/NMI/purity when a label column is available.
 
-## What’s implemented (Easy Task)
+## Data manifests (already in `data/`)
 
-- Audio feature extraction (MFCC summary statistics)
-- Lyrics-only feature extraction (TF-IDF over lyrics)
-- Basic VAE (MLP encoder/decoder) for latent feature extraction
-- Clustering on latent codes using K-Means
-- Baseline: PCA + K-Means
-- Metrics: Silhouette Score, Calinski–Harabasz, Davies–Bouldin (and optional ARI/NMI if labels exist)
-- Visualizations: t-SNE or UMAP scatter of latent space
+The pipeline is driven by CSV manifests. The most important ones:
+- `data/metadata_audio_lyrics_mixed.csv`: paired audio+lyrics (multilingual).
+- `data/metadata_known_categories_preprocessed_balanced.csv`: lyrics-only dataset used for the Easy task (balanced; good for en vs bn clustering).
+- `data/metadata.csv`: default manifest written by the downloader.
 
-## Data format
+Expected columns (depending on feature mode):
+- Required: `id`
+- Audio features: `audio_path`
+- Lyrics features: `lyrics` (or `lyrics_clean` if present)
+- Labels for evaluation: `label` (or pass `--label-col language`, etc.)
+- Optional metadata for plots: `language`, `category`/`genre`
 
-Create a CSV manifest at `data/metadata.csv` with columns:
+## Setup (Windows / PowerShell)
 
-- `id` (unique string)
-- `audio_path` (path to audio file, relative to repo root or absolute)
-- `language` (optional, e.g., `en`)
-- `genre` (optional)
-- `label` (optional ground-truth label for ARI/NMI; can be language/genre)
-- `lyrics` (optional raw lyric text)
-
-Example row:
-
-```csv
-id,audio_path,language,genre,label,lyrics
-song001,data/audio/song001.wav,en,pop,en,"some lyrics here"
+```powershell
+cd E:\JetBrains\project
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
 ```
 
-## Setup
+## Download JamendoLyrics subset (optional)
 
-```bash
-# Option A: quick helper (creates .venv if missing)
-INSTALL_DEPS=1 source scripts/activate_env.sh
+Downloads audio into `data/audio/`, lyrics into `data/lyrics/`, and writes `data/metadata.csv`:
 
-# Option B: manual
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
+```powershell
+python download.py --language English
 ```
 
-## Download JamendoLyrics (English subset)
+You can keep all languages:
 
-This project expects a `data/metadata.csv` manifest. You can generate a 1000-song subset using Hugging Face datasets (default) or Kaggle.
+```powershell
+python download.py --language all
+```
 
-The recommended way is the repo-level downloader which fetches the raw MP3/lyrics files from Hugging Face Hub and writes the manifest the pipeline expects.
+If Hugging Face access is gated:
 
-If access is gated, login once:
-
-```bash
+```powershell
 huggingface-cli login
 ```
 
-Then download the English subset into `data/audio/` and `data/lyrics/`, and write `data/metadata.csv`:
+## Run all experiment suites (Easy / Medium / Hard)
 
-```bash
-python3 download.py --language English
+Canonical runner:
+
+```powershell
+python scripts\run_all_tasks.py --device cpu
 ```
 
-Notes:
+Compatibility shortcut (forwards to the same runner):
 
-- The downloader avoids `datasets` audio decoding (no `torchcodec` requirement).
-- You can change the dataset repo or language:
-
-```bash
-python3 download.py --repo-id jamendolyrics/jamendolyrics --language English
+```powershell
+python run_all_tasks.py --device cpu
 ```
 
-## Download MTG-Jamendo audio (no lyrics)
+Quick smoke run:
 
-If your next task needs audio features, you can also download a subset of the Hugging Face dataset `rkstgr/mtg-jamendo`.
-
-Important: MTG-Jamendo provides **full audio + tags** (genres/instruments/moods), but **does not include lyrics**.
-
-This script downloads `.opus` audio files and generates a compatible manifest CSV:
-
-```bash
-python scripts/import_hf_mtg_jamendo_audio.py \
-  --split train \
-  --max-tracks 500 \
-  --data-dir data/jamendo
+```powershell
+python scripts\run_all_tasks.py --device cpu --viz none --epochs-easy 1 --epochs-medium 1 --epochs-hard 1
 ```
 
-Output:
+Where results go (created next to the runner script):
+- `scripts/results_easy_task/`
+- `scripts/results_medium_task/`
+- `scripts/results_hard_task/`
 
-- `data/jamendo/audio/*.opus`
-- `data/jamendo/metadata_mtg_jamendo_train.csv`
+Each task folder contains per-run subfolders plus an aggregated comparison CSV:
+- `easy_task_comparison.csv`
+- `medium_task_comparison.csv`
+- `hard_task_comparison.csv`
 
-## Run: VAE → Latents → Clustering
+## Run a single pipeline experiment
 
-```bash
-python -m src.run_pipeline \
-  --metadata data/metadata.csv \
-  --feature mfcc \
-  --latent-dim 16 \
-  --clusters 4 \
-  --viz umap \
-  --outdir results
+Lyrics-only TF-IDF example:
+
+```powershell
+python -m src.run_pipeline ^
+  --metadata data\metadata_known_categories_preprocessed_balanced.csv ^
+  --feature lyrics_tfidf ^
+  --baseline pca ^
+  --clusters 2 ^
+  --label-col language ^
+  --viz none ^
+  --outdir scripts\scratch_run
 ```
 
-Convolutional VAE on time-frequency features (MFCC frames or log-mel spectrogram):
+Audio log-mel ConvVAE example:
 
-```bash
-python -m src.run_pipeline \
-  --metadata data/jamendo_demo/metadata_mtg_jamendo_train.csv \
-  --feature logmelspec \
-  --vae-arch conv2d \
-  --latent-dim 16 \
-  --clusters 4 \
-  --cluster-method kmeans \
-  --viz umap \
-  --outdir results_audio_conv
+```powershell
+python -m src.run_pipeline ^
+  --metadata data\metadata_audio_lyrics_mixed.csv ^
+  --feature logmelspec ^
+  --vae-arch conv2d ^
+  --baseline none ^
+  --clusters 6 ^
+  --label-col language ^
+  --viz tsne ^
+  --outdir scripts\scratch_audio
 ```
 
-Try different clusterers (K-Means / Agglomerative / DBSCAN):
+## Utility scripts
 
-```bash
-python -m src.run_pipeline \
-  --metadata data/jamendo_demo/metadata_mtg_jamendo_train.csv \
-  --feature logmelspec \
-  --vae-arch conv2d \
-  --cluster-method dbscan \
-  --dbscan-eps 0.8 \
-  --dbscan-min-samples 10 \
-  --viz umap \
-  --outdir results_audio_dbscan
-```
-
-Hybrid audio + lyrics embeddings (requires the SAME track IDs to have both audio_path and lyrics):
-
-```bash
-python -m src.run_pipeline \
-  --metadata data/metadata.csv \
-  --feature hybrid \
-  --audio-feature mfcc \
-  --lyrics-embed-dim 128 \
-  --latent-dim 16 \
-  --clusters 4 \
-  --viz umap \
-  --outdir results_hybrid
-```
-
-Lyrics-only (no audio required):
-
-```bash
-python -m src.run_pipeline \
-  --metadata data/metadata_known_categories_preprocessed_balanced.csv \
-  --feature lyrics_tfidf \
-  --latent-dim 16 \
-  --clusters 4 \
-  --viz umap \
-  --outdir results
-```
-
-To generate a t-SNE visualization instead:
-
-```bash
-python -m src.run_pipeline \
-  --metadata data/metadata.csv \
-  --feature mfcc \
-  --clusters 4 \
-  --viz tsne \
-  --outdir results
-```
-
-## Run: PCA baseline
-
-```bash
-python -m src.run_pipeline \
-  --metadata data/metadata.csv \
-  --feature mfcc \
-  --baseline pca \
-  --clusters 4 \
-  --viz umap \
-  --outdir results
-```
-
-PCA baseline with t-SNE plot:
-
-```bash
-python -m src.run_pipeline \
-  --metadata data/metadata.csv \
-  --feature mfcc \
-  --baseline pca \
-  --clusters 4 \
-  --viz tsne \
-  --outdir results
-```
-
-## Compare baseline (Silhouette + Calinski–Harabasz)
-
-After running both `vae` and `pca` once (they append rows to the same CSV), print the latest comparison:
-
-```bash
-python3 scripts/compare_baseline.py
-```
+- `scripts/preprocess_lyrics_mixed.py`: writes a `lyrics_clean` column for cleaner TF-IDF.
+- `scripts/compare_baseline.py`: compares the latest `vae` vs `pca` rows inside a metrics CSV (pass `--metrics` if your output folder is not `results/`).
+- `scripts/tune_lyrics_vae.py`: optional tuning helper for lyrics VAE.
+- `scripts/fetch_bangla_lyrics.py`: optional Bangla lyrics scraper template.
+  - Requires extra deps: `pip install requests beautifulsoup4` (and optionally `langid`).
 
 ## Outputs
 
-- `results/clustering_metrics.csv`
-- `results/latent_visualization/*.png`
-- `results/latents.npz` (latent vectors + ids)
+Every pipeline run writes:
+- `clustering_metrics.csv` (appended per run)
+- `latents.npz` (embeddings + ids)
+- `latent_visualization/` (plots when `--viz tsne|umap`)
+- `reconstructions/` (when `--save-recon`)
 
-## Notes
+## Report
 
-- Audio loading uses `librosa`; supported formats depend on your system codecs.
-- If you don’t have `label`, ARI/NMI are skipped.
+The project writeup is in `PROJECT_REPORT.md`.
